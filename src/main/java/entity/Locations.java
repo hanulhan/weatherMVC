@@ -6,19 +6,23 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -37,6 +41,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Locations.findByLat", query = "SELECT l FROM Locations l WHERE l.lat = :lat"),
     @NamedQuery(name = "Locations.findByLon", query = "SELECT l FROM Locations l WHERE l.lon = :lon")})
 public class Locations implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "locationId")
+    private Collection<ProviderLocations> providerLocationsCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -155,6 +162,15 @@ public class Locations implements Serializable {
     @Override
     public String toString() {
         return "entity.Locations[ locationId=" + locationId + " ]";
+    }
+
+    @XmlTransient
+    public Collection<ProviderLocations> getProviderLocationsCollection() {
+        return providerLocationsCollection;
+    }
+
+    public void setProviderLocationsCollection(Collection<ProviderLocations> providerLocationsCollection) {
+        this.providerLocationsCollection = providerLocationsCollection;
     }
     
 }
